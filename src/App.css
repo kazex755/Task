@@ -1,0 +1,801 @@
+:root {
+  --bg-dark: #050811;
+  --bg-panel: rgba(11, 17, 26, 0.86);
+  --bg-card: rgba(18, 27, 38, 0.88);
+  --bg-card-strong: rgba(20, 31, 45, 0.96);
+  --text-main: #f3f7fb;
+  --text-muted: #93a4bb;
+  --line: rgba(255, 255, 255, 0.08);
+  --neon-blue: #00d2ff;
+  --neon-orange: #ff7b2f;
+  --neon-green: #00ff88;
+  --neon-purple: #9b51e0;
+  --color-success: #00ff88;
+  --color-error: #ff3366;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+}
+
+[data-theme="light"] {
+  --bg-dark: #eaf0f7;
+  --bg-panel: rgba(255, 255, 255, 0.88);
+  --bg-card: rgba(243, 247, 252, 0.96);
+  --bg-card-strong: rgba(255, 255, 255, 0.98);
+  --text-main: #162033;
+  --text-muted: #5f6f86;
+  --line: rgba(15, 23, 42, 0.08);
+  --neon-blue: #0284c7;
+  --neon-orange: #ea580c;
+  --shadow: 0 20px 50px rgba(15, 23, 42, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(0, 210, 255, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(155, 81, 224, 0.16), transparent 24%),
+    radial-gradient(circle at bottom center, rgba(255, 123, 47, 0.12), transparent 24%),
+    var(--bg-dark);
+  color: var(--text-main);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  line-height: 1.45;
+}
+
+body::selection {
+  background: rgba(0, 210, 255, 0.28);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: none;
+}
+
+input,
+textarea,
+select {
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.18);
+}
+
+.container-rpg {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 320px;
+  gap: 20px;
+  padding: 20px;
+  min-height: 100vh;
+  align-items: start;
+}
+
+.painel-status,
+.painel-central {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.painel-status {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.painel-central {
+  min-width: 0;
+}
+
+h2 {
+  color: var(--neon-blue);
+  font-size: 1.06rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-bottom: 1px solid rgba(0, 210, 255, 0.32);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  color: var(--text-main);
+  margin: 18px 0 10px;
+  font-size: 1rem;
+}
+
+h4 {
+  margin-bottom: 8px;
+  font-size: 0.98rem;
+}
+
+.header-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-tema,
+.btn-secundario,
+.btn-add-missao,
+.btn-lutar,
+.btn-atacar,
+.btn-fugir,
+.btn-concluir,
+.btn-excluir,
+.btn-erro,
+.card-item-loja button,
+.quick-actions button,
+.grid-botoes button {
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    filter 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.btn-tema:hover,
+.btn-secundario:hover,
+.btn-add-missao:hover,
+.btn-lutar:hover,
+.btn-atacar:hover,
+.btn-fugir:hover,
+.btn-concluir:hover,
+.btn-excluir:hover,
+.btn-erro:hover,
+.card-item-loja button:hover,
+.quick-actions button:hover,
+.grid-botoes button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.btn-tema {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+.btn-secundario {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+.btn-secundario:hover {
+  border-color: rgba(0, 210, 255, 0.16);
+}
+
+.classe-tag,
+.rank-jogador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.classe-tag {
+  background: linear-gradient(135deg, var(--neon-orange), #ff2a00);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(255, 123, 47, 0.14);
+}
+
+.rank-jogador.E {
+  background: #6b7280;
+  color: #fff;
+}
+.rank-jogador.F {
+  background: #16a34a;
+  color: #fff;
+}
+.rank-jogador.D {
+  background: #2563eb;
+  color: #fff;
+}
+.rank-jogador.C {
+  background: #7c3aed;
+  color: #fff;
+}
+.rank-jogador.B {
+  background: #db2777;
+  color: #fff;
+}
+.rank-jogador.A {
+  background: #ea580c;
+  color: #fff;
+}
+.rank-jogador.S {
+  background: linear-gradient(90deg, #f59e0b, #fde047);
+  color: #111;
+}
+.rank-jogador.SS {
+  background: linear-gradient(90deg, #ef4444, #7f1d1d);
+  color: #fff;
+}
+.rank-jogador.NATIONAL {
+  background: linear-gradient(90deg, #22d3ee, #8b5cf6, #ef4444);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.38);
+}
+
+.status-info,
+.seccao-lista,
+.atributos-grid,
+.lista-missoes,
+.grid-loja-itens,
+.selecao-monstros {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.status-info p {
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.ouro-contador {
+  font-size: 1.06rem;
+  font-weight: 800;
+  color: #ffd54a;
+}
+
+.barra-container {
+  background: rgba(0, 0, 0, 0.24);
+  border-radius: 999px;
+  overflow: hidden;
+  height: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.barra-interna {
+  height: 100%;
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+.barra-interna.xp {
+  background: linear-gradient(90deg, var(--neon-blue), #00ffcc);
+}
+
+.barra-interna.hp {
+  background: linear-gradient(90deg, #ff4d6d, #ff0000);
+}
+
+.barra-interna.mp {
+  background: linear-gradient(90deg, #5b8cff, #00d2ff);
+}
+
+.atributos-grid div {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.seccao-lista .badge,
+.badge-debuff {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  background: rgba(0, 210, 255, 0.08);
+  color: var(--neon-blue);
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 210, 255, 0.16);
+}
+
+.badge.debuff,
+.badge-debuff {
+  background: rgba(255, 51, 102, 0.1);
+  color: #ff7b9d;
+  border-color: rgba(255, 51, 102, 0.22);
+}
+
+.badge-debuff.chamas {
+  color: #ff9555;
+}
+.badge-debuff.veneno {
+  color: #4ade80;
+}
+.badge-debuff.sangramento {
+  color: #fb7185;
+}
+.badge-debuff.cegueira {
+  color: #cbd5e1;
+}
+.badge-debuff.sono {
+  color: #c084fc;
+}
+
+.abas-navegacao {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.abas-navegacao button {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  border: 1px solid var(--line);
+}
+
+.abas-navegacao button.ativa {
+  background: linear-gradient(135deg, var(--neon-blue), #00a3ff);
+  color: #001018;
+  font-weight: 800;
+  box-shadow: 0 12px 25px rgba(0, 210, 255, 0.12);
+}
+
+.quadro,
+.combate-ativo,
+.card-missao,
+.card-item-loja,
+.card-monstro,
+.estado-vazio,
+.modal-content {
+  background: var(--bg-card-strong);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.quadro {
+  padding: 18px;
+}
+
+.form-missao {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.form-missao input,
+.form-missao textarea,
+.form-missao select {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  color: var(--text-main);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.form-missao input:hover,
+.form-missao textarea:hover,
+.form-missao select:hover {
+  border-color: rgba(0, 210, 255, 0.22);
+}
+
+.form-missao textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.opcoes-linha {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 12px;
+}
+
+.dias-seletor p {
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.dias-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dias-botoes button {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  border: 1px solid var(--line);
+}
+
+.dias-botoes button.ativo {
+  background: linear-gradient(135deg, var(--neon-orange), #ff4d00);
+  color: white;
+  border-color: rgba(255, 123, 47, 0.2);
+}
+
+.btn-add-missao {
+  background: linear-gradient(135deg, var(--neon-blue), #0084ff);
+  color: #001018;
+  font-weight: 800;
+  box-shadow: 0 16px 28px rgba(0, 132, 255, 0.12);
+}
+
+.card-missao {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  transition: transform 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.card-missao:hover,
+.card-monstro:hover,
+.card-item-loja:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 210, 255, 0.18);
+}
+
+.card-missao.concluida {
+  opacity: 0.45;
+}
+
+.card-corpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-corpo h3 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 6px;
+}
+
+.desc,
+.card-monstro p,
+.card-item-loja p,
+.vazio,
+.estado-vazio p {
+  color: var(--text-muted);
+}
+
+.metadados {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.xp-badge {
+  background: rgba(0, 210, 255, 0.12);
+  color: var(--neon-blue);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  border: 1px solid rgba(0, 210, 255, 0.12);
+}
+
+.card-acoes {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.btn-concluir {
+  background: rgba(0, 255, 136, 0.12);
+  color: var(--neon-green);
+  border: 1px solid rgba(0, 255, 136, 0.18);
+}
+
+.btn-excluir,
+.btn-erro {
+  background: rgba(255, 51, 102, 0.12);
+  color: var(--color-error);
+  border: 1px solid rgba(255, 51, 102, 0.18);
+}
+
+.card-monstro {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-left: 4px solid rgba(0, 210, 255, 0.3);
+}
+
+.card-monstro.rank-E {
+  border-left-color: #6b7280;
+}
+.card-monstro.rank-F {
+  border-left-color: #16a34a;
+}
+.card-monstro.rank-D {
+  border-left-color: #2563eb;
+}
+.card-monstro.rank-C {
+  border-left-color: #7c3aed;
+}
+.card-monstro.rank-B {
+  border-left-color: #db2777;
+}
+.card-monstro.rank-A {
+  border-left-color: #ea580c;
+}
+.card-monstro.rank-S {
+  border-left-color: #f59e0b;
+}
+.card-monstro.rank-SS {
+  border-left-color: #ef4444;
+}
+.card-monstro.rank-NATIONAL {
+  border-left-color: #22d3ee;
+}
+
+.btn-lutar,
+.btn-atacar {
+  background: linear-gradient(135deg, var(--color-error), #b3002d);
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 14px 24px rgba(255, 51, 102, 0.12);
+}
+
+.btn-fugir {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  border: 1px solid var(--line);
+}
+
+.combate-ativo {
+  padding: 16px;
+}
+
+.nome-monstro {
+  font-weight: 900;
+  margin: 8px 0;
+  font-size: 1.04rem;
+}
+
+.logs-caixa {
+  background: rgba(4, 7, 12, 0.95);
+  height: 190px;
+  overflow-y: auto;
+  padding: 12px;
+  border-radius: 14px;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+  color: #9bffb5;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 12px 0;
+}
+
+.logs-caixa p {
+  margin-bottom: 6px;
+}
+
+.botoes-combate,
+.grid-botoes,
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.grid-botoes {
+  flex-direction: column;
+}
+
+.btn-habilidade {
+  background: rgba(0, 210, 255, 0.1);
+  color: var(--neon-blue);
+  border: 1px solid rgba(0, 210, 255, 0.16);
+  text-align: left;
+}
+
+.btn-habilidade:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.grid-loja-itens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 14px;
+}
+
+.card-item-loja {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.card-item-loja button {
+  background: linear-gradient(135deg, #ffd54a, #d4af37);
+  color: #111;
+  font-weight: 800;
+  box-shadow: 0 14px 24px rgba(212, 175, 55, 0.12);
+}
+
+.alerta {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  padding: 14px 18px;
+  border-radius: 16px;
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
+  animation: toastIn 0.22s ease-out;
+  max-width: min(92vw, 360px);
+}
+
+.alerta.sucesso {
+  background: linear-gradient(135deg, var(--color-success), #00c96f);
+  color: #00110a;
+}
+
+.alerta.erro {
+  background: linear-gradient(135deg, var(--color-error), #c40034);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  padding: 16px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  width: min(92vw, 420px);
+  background: var(--bg-panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.boss-divino {
+  border-color: rgba(34, 211, 238, 0.28);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.08);
+}
+
+.painel-direito {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.estado-vazio {
+  padding: 18px;
+  text-align: center;
+  border-style: dashed;
+}
+
+.vazio {
+  font-style: italic;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0, 210, 255, 0.55), rgba(155, 81, 224, 0.55));
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(0, 210, 255, 0.8), rgba(155, 81, 224, 0.8));
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 1220px) {
+  .container-rpg {
+    grid-template-columns: 1fr;
+  }
+
+  .painel-status,
+  .painel-central {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .container-rpg {
+    padding: 12px;
+    gap: 14px;
+  }
+
+  .painel-status,
+  .painel-central {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .opcoes-linha,
+  .card-missao,
+  .card-monstro {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-acoes,
+  .botoes-combate,
+  .quick-actions {
+    width: 100%;
+  }
+
+  .card-item-loja button,
+  .btn-add-missao,
+  .btn-lutar,
+  .btn-atacar,
+  .btn-fugir,
+  .btn-concluir,
+  .btn-excluir,
+  .btn-erro,
+  .btn-secundario {
+    width: 100%;
+  }
+}

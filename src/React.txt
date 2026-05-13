@@ -1,0 +1,227 @@
+import { useState, useEffect } from "react";
+import "./App.css";
+
+function App() {
+    const [lista, setLista] = useState(() => {
+        const listaSalva = localStorage.getItem("lista-tarefas");
+        return listaSalva ? JSON.parse(listaSalva) : [];
+    });
+    const [input, setInput] = useState("");
+    const [modo, setModo] = useState(() => {
+        const temaSalvo = localStorage.getItem("modo-escuro");
+        return temaSalvo === "true";
+    });
+    const [notificacao, setNotificacao] = useState({ mensagem: "", tipo: "" });
+    const [horario, setHorario] = useState("");
+    const [modalExcluir, setModalExcluir] = useState({
+        aberto: false,
+        idTarefa: null
+    });
+
+    useEffect(() => {
+        if (modo) {
+            document.documentElement.setAttribute("data-theme", "dark");
+            localStorage.setItem("modo-escuro", "true");
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+            localStorage.setItem("modo-escuro", "false");
+        }
+    }, [modo]);
+
+    useEffect(() => {
+        localStorage.setItem("lista-tarefas", JSON.stringify(lista));
+    }, [lista]);
+
+    useEffect(() => {
+        const intervalo = setInterval(() => {
+            const agora = new Date();
+            const horaAtual = `${String(agora.getHours()).padStart(2, "0")}:${String(agora.getMinutes()).padStart(2, "0")}`;
+
+            lista.forEach(tarefa => {
+                if (
+                    tarefa.horario === horaAtual &&
+                    !tarefa.concluida &&
+                    !tarefa.alarmeDisparado
+                ) {
+                    mostrarAviso(`⏰ ALARME: ${tarefa.texto}`, "erro");
+
+                    // Marca que o alarme já disparou para não ficar repetindo no mesmo minuto
+                    setLista(prevLista =>
+                        prevLista.map(item =>
+                            item.id === tarefa.id
+                                ? { ...item, alarmeDisparado: true }
+                                : item
+                        )
+                    );
+                }
+            });
+        }, 1000);
+
+        return () => clearInterval(intervalo);
+    }, [lista]);
+
+    function mostrarAviso(mensagem, tipo) {
+        setNotificacao({ mensagem, tipo });
+        setTimeout(() => {
+            setNotificacao({ mensagem: "", tipo: "" });
+        }, 3000);
+    }
+
+    const modoescuro = () => {
+        setModo(prevModo => !prevModo);
+    };
+
+    function addTarefa() {
+        if (input.trim() === "") {
+            mostrarAviso("Digite a tarefa primeiro!", "erro");
+            return;
+        }
+
+        const novaTarefa = {
+            id: Date.now(),
+            texto: input,
+            concluida: false
+        };
+
+        setLista([...lista, novaTarefa]);
+
+        setInput("");
+        setHorario("");
+
+        mostrarAviso("Tarefa adicionada com sucesso!", "sucesso");
+    }
+
+    function confirmarExclusao(id) {
+        setModalExcluir({ aberto: true, idTarefa: id });
+    }
+
+    function executarExclusao() {
+        const listaAtualizada = lista.filter(
+            item => item.id !== modalExcluir.idTarefa
+        );
+        setLista(listaAtualizada);
+        setModalExcluir({ aberto: false, idTarefa: null });
+        mostrarAviso("Tarefa excluída!", "erro");
+    }
+
+    function excluirTarefa(idParaExcluir) {
+        const listaAtualizada = lista.filter(item => item.id !== idParaExcluir);
+        setLista(listaAtualizada);
+    }
+
+    function alternarConcluida(idParaConcluida) {
+        const listaAtualizada = lista.map(item => {
+            if (item.id === idParaConcluida) {
+                return { ...item, concluida: !item.concluida };
+            }
+            return item;
+        });
+        setLista(listaAtualizada);
+    }
+
+    return (
+        <div className="container">
+            {notificacao.mensagem && (
+                <div
+                    className={`alerta
+                ${notificacao.tipo}`}
+                >
+                    {notificacao.mensagem}
+                </div>
+            )}
+            {modalExcluir.aberto && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Tem certeza que deseja excluir esta tarefa?</h3>
+                        <div className="modal-botoes">
+                            <button
+                                onClick={executarExclusao}
+                                className="btn-confirmar"
+                            >
+                                Sim, Excluir
+                            </button>
+                            <button
+                                onClick={() =>
+                                    setModalExcluir({
+                                        aberto: false,
+                                        idTarefa: null
+                                    })
+                                }
+                                className="btn-cancelar"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            <header className="header">
+                <h1>Tarefas Diarias</h1>
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                        checked={modo}
+                        onChange={modoescuro}
+                    />
+                    <span className="slider"></span>
+                </label>
+            </header>
+            <ul>
+                {lista.map(item => (
+                    <li
+                        key={item.id}
+                        style={{ margin: "10px 0", listStyle: "none" }}
+                    >
+                        <span
+                            style={{
+                                marginRight: "10px",
+                                textDecoration: item.concluida
+                                    ? "line-through"
+                                    : "none",
+                                color: item.concluida ? "gray" : "inherit"
+                            }}
+                        >
+                            {" "}
+                            {item.texto}
+                        </span>
+
+                        <button
+                            onClick={() => alternarConcluida(item.id)}
+                            style={{
+                                marginRight: "5px",
+                                background: item.concluida
+                                    ? "#6c757d"
+                                    : "#28a745",
+                                color: "white"
+                            }}
+                        >
+                            {""}
+                            {item.concluida ? "Desmarcou" : "Concluir"}
+                        </button>
+
+                        <button onClick={() => excluirTarefa(item.id)}>
+                            Excluir
+                        </button>
+                    </li>
+                ))}
+            </ul>
+
+            <input
+                type="text"
+                placeholder="Tarefa Diaria"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+            />
+            <input
+                type="time"
+                value={horario}
+                onChange={e => setHorario(e.target.value)}
+                className="input-hora"
+            />
+
+            <button onClick={addTarefa}>Adicionar</button>
+        </div>
+    );
+}
+
+export default App;
