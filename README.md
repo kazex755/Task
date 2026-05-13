@@ -11,3 +11,4 @@ Currently, two official plugins are available:
 # TASK-RPG
 # TASK-RPG
 # Task
+# Task
